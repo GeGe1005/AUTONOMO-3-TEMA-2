@@ -31,7 +31,7 @@ void ingresardatos()
 int cant=validarentero(" Cuantos dias desea registrar inicialmente? : ");
 for (int i=0; i<cant&&n<maxd; i++)
 {
-	cout<< " Dia "<<n+1<<"(⁠ㆁ⁠ω⁠ㆁ⁠)"<<endl;
+	cout<< " Dia "<<n+1<<endl;
 	pasos[n]=validarentero(" Pasos diarios: ");
 	minutos[n]=validarentero(" Minutos de actividad: ");
 	calorias[n]=validarentero(" Calorias quemadas: ");
@@ -137,23 +137,80 @@ void eliminaregistro()
 	cout<<" Dia eliminado. "<<endl;
 	}
 }//INICIAREMOS EL ANALISIS ESTADISTICO
-void realizaranalisis()
+float media(int arreglo[])
+{//Media
+	int suma=0;
+	for(int i=0; i<n; i++)
+	suma+=arreglo[i];
+	return(float)suma/n;
+}//Mediana
+float mediana(int arreglo[])
 {
-	if(n==0) return;
-	int sump=0, summ=0, sumc=0;
+	int temp[maxd];
+	for(int i=0;i<n-1; i++)
+	for(int j=0; j<n-i-1; j++)
+	if(temp[j]>temp[j+1])
+	intercambiar(temp[j], temp[j+1]);
+	if (n%2==1)
+	return temp[n/2];
+	else
+	return(temp[n/2-1]+temp[n/2])/2.0;
+}//Moda
+int moda(int arreglo[])
+{
+	int moda=arreglo[0], maxf=1;
+	for(int i=0;i<n; i++)
+	{
+	int f=1;
+	for(int j=i+1; j<n; j++)
+	if(arreglo[i]==arreglo[j])
+	f++;
+	if(f>maxf)
+	{
+	maxf=f;
+	moda=arreglo[i];
+	}
+	}
+	return moda;
+}
+void clasificaractividad()
+{
+	int descanso=0, activo=0, mactivo=0;
 	for(int i=0; i<n; i++)
 	{
-	sump+=pasos[i];
-	summ+=minutos[i];
-	sumc+=calorias[i];
+	if(pasos[i]<5000)
+	descanso++;
+	else if(pasos[i]<10000)
+	activo++;
+	else
+	mactivo++;
 	}
-	cout<<" ANALISIS ESTADISTICO "<<endl;
-	cout<<" Media de pasos: "<<(float)sump/n<<endl;
-	cout<<" Media de minutos: "<<(float)summ/n<<endl;
-	cout<<" Media de calorias: "<<(float)sumc/n<<endl;
-int diadescanso=0;
-for(int i=0; i<n; i++) if(pasos[i]<5000)diadescanso++;
-cout<<" Dias de descanso (5000 pasos): "<<diadescanso<<endl;
+	cout<<" CLASIFICACION ";
+	cout<<" Dias de sedentarios: "<<descanso<<endl;
+	cout<<" Dias activos: "<<activo<<endl;
+	cout<<" dias muy activos: "<<mactivo<<endl;
+}
+void realizaranalisis()
+{
+	if(n==0)
+	{
+	cout<<" No hay datos.";
+	return;
+	}
+	cout<<" ANALISIS ESTADISTICO ";
+	cout<<"\nPASOS\n";
+	cout<<" Media: "<<media(pasos)<<endl;
+	cout<<" Mediana: "<<mediana(pasos)<<endl;
+	cout<<" Moda: "<<moda(pasos)<<endl;
+	cout<<"\nMINUTOS\n";
+	cout<<" Media: "<<media(minutos)<<endl;
+	cout<<" Mediana: "<<mediana(minutos)<<endl;
+	cout<<" Moda: "<<moda(minutos)<<endl;
+	cout<<"\nCALORIAS\n";
+	cout<<" Media: "<<media(calorias)<<endl;
+	cout<<" Mediana: "<<mediana(calorias)<<endl;
+	cout<<" Moda: "<<moda(calorias)<<endl;
+	clasificaractividad();
 }
 int main()
 {
